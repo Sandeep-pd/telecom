@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telecom Network Intelligence</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Telecom Network Intelligence</h1>
+        <p>Monitor network quality, predict service health, and detect anomalies.</p>
+      </header>
+
+      <main class="grid">
+        <section class="card dashboard-panel" id="dashboard-panel">
+          <h2>Network overview</h2>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <span class="label">Total measurements</span>
+              <strong id="total-measurements">-</strong>
+            </div>
+            <div class="stat-card">
+              <span class="label">Active cells</span>
+              <strong id="active-cells">-</strong>
+            </div>
+            <div class="stat-card">
+              <span class="label">Avg latency</span>
+              <strong id="avg-latency">-</strong>
+            </div>
+            <div class="stat-card">
+              <span class="label">Avg packet loss</span>
+              <strong id="avg-packet-loss">-</strong>
+            </div>
+            <div class="stat-card">
+              <span class="label">Avg download</span>
+              <strong id="avg-download-speed">-</strong>
+            </div>
+          </div>
+          <div class="network-test-panel">
+            <div class="network-test-heading">
+              <div>
+                <h3>Live internet connection</h3>
+                <p id="connection-status">Run a test to measure this computer’s connection.</p>
+              </div>
+              <button id="run-speed-test" type="button">Run speed test</button>
+            </div>
+            <div class="stats-grid network-test-stats">
+              <div class="stat-card">
+                <span class="label">Latency</span>
+                <strong id="live-latency">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Download</span>
+                <strong id="live-download">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Upload</span>
+                <strong id="live-upload">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Browser connection estimate</span>
+                <strong id="connection-profile">—</strong>
+              </div>
+            </div>
+            <p class="network-test-note">
+              The test contacts Cloudflare’s public speed-test service and transfers up to 6 MiB.
+              The quality label is a rough guide. Internet results do not measure mobile radio signal (RSRP/SINR).
+            </p>
+          </div>
+          <div class="network-test-panel">
+            <div class="network-test-heading">
+              <div>
+                <h3>This computer’s live network adapters</h3>
+                <p id="local-network-status">Waiting for the first network sample…</p>
+              </div>
+            </div>
+            <div class="stats-grid network-test-stats">
+              <div class="stat-card">
+                <span class="label">Internet access</span>
+                <strong id="host-internet-status">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Probe latency</span>
+                <strong id="host-probe-latency">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Wi-Fi network</span>
+                <strong id="host-wifi-ssid">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Wi-Fi signal</span>
+                <strong id="host-wifi-signal">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Wi-Fi radio / channel</span>
+                <strong id="host-wifi-radio">—</strong>
+              </div>
+              <div class="stat-card">
+                <span class="label">Wi-Fi link rates (receive / transmit)</span>
+                <strong id="host-wifi-rates">—</strong>
+              </div>
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Adapter</th>
+                    <th>State</th>
+                    <th>Link speed</th>
+                    <th>Local IP addresses</th>
+                    <th>Receive rate</th>
+                    <th>Transmit rate</th>
+                  </tr>
+                </thead>
+                <tbody id="local-network-adapters">
+                  <tr><td colspan="6">Waiting for live adapter data…</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="chart-panel">
+              <h3>Live traffic and latency (last 5 minutes)</h3>
+              <div class="live-chart-legend">
+                <span><i class="legend-receive"></i>Receive</span>
+                <span><i class="legend-transmit"></i>Transmit</span>
+                <span><i class="legend-latency"></i>Internet probe latency</span>
+              </div>
+              <svg
+                id="local-network-chart"
+                viewBox="0 0 640 220"
+                preserveAspectRatio="none"
+                role="img"
+                aria-label="Rolling chart of network receive and transmit rates and internet probe latency"
+              ></svg>
+              <p id="local-chart-status" class="network-test-note">
+                Traffic history begins when monitoring starts and is kept only in this browser tab.
+              </p>
+            </div>
+            <p class="network-test-note">
+              Refreshes every 5 seconds. Interface details come from the computer running the app.
+              If this app is hosted remotely, these are the server’s adapters, not the browser device.
+            </p>
+          </div>
+          <div class="chart-panel">
+            <h3>Quality trend</h3>
+            <svg id="trend-chart" viewBox="0 0 640 220" preserveAspectRatio="none"></svg>
+          </div>
+          <div class="table-wrapper">
+            <h3>Recent signals</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Cell</th>
+                  <th>Region</th>
+                  <th>Network</th>
+                  <th>Latency</th>
+                  <th>Packet loss</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody id="recent-signals-body">
+                <tr><td colspan="6">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card" id="measurement-panel">
+          <h2>Create measurement</h2>
+          <form id="measurement-form">
+            <div class="field-grid">
+              <label>Cell ID<input name="cell_id" value="CELL_101" /></label>
+              <label>Region<input name="region" value="Raipur" /></label>
+              <label>Network Type<select name="network_type"><option>5G</option><option>4G</option><option>LTE</option></select></label>
+              <label>Timestamp<input name="timestamp" type="datetime-local" value="2026-10-06T12:00" /></label>
+              <label>Rsrp<input name="rsrp" type="number" value="-92" /></label>
+              <label>Rsrq<input name="rsrq" type="number" value="-11" /></label>
+              <label>Rssi<input name="rssi" type="number" value="-68" /></label>
+              <label>Sinr<input name="sinr" type="number" value="17" /></label>
+              <label>Download Speed<input name="download_speed" type="number" value="78" /></label>
+              <label>Upload Speed<input name="upload_speed" type="number" value="20" /></label>
+              <label>Latency<input name="latency" type="number" value="28" /></label>
+              <label>Packet Loss<input name="packet_loss" type="number" step="0.1" value="0.7" /></label>
+              <label>Connected Users<input name="connected_users" type="number" value="85" /></label>
+              <label>Call Drop Rate<input name="call_drop_rate" type="number" step="0.1" value="0.9" /></label>
+              <label>Handover Failure Rate<input name="handover_failure_rate" type="number" step="0.1" value="1.3" /></label>
+            </div>
+            <button type="submit">Save measurement</button>
+          </form>
+        </section>
+
+        <section class="card">
+          <h2>Quick actions</h2>
+          <div id="quick-actions" class="action-row">
+            <button id="fetch-measurements">Load measurements</button>
+            <button id="predict-btn">Predict quality</button>
+            <button id="anomaly-btn">Detect anomaly</button>
+          </div>
+          <div class="output-box">
+            <h3>Results</h3>
+            <pre id="results">No output yet.</pre>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
